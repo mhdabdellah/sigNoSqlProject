@@ -5,9 +5,47 @@ from geopy.geocoders import Nominatim
 from geopy.distance import geodesic
 from .utils import get_geo, get_center_coordinates, get_zoom,get_ip_address
 import folium
+import geocoder
+
 # Create your views here.
 
 def calculate_distance_view(request):
+    # if request.method == 'POST':
+    #     form = SearchForm(request.POST)
+    #     if form.is_valid():
+    #         form.save()
+    #         return redirect('/')
+    # else:
+    #     form = SearchForm()
+    # address = Search.objects.all().last()
+    # location = geocoder.osm(address)
+    # lat = location.lat
+    # lng = location.lng
+    # country = location.country
+    # if lat == None or lng == None:
+    #     address.delete()
+    #     return HttpResponse('You address input is invalid')
+
+    # Create Map Object
+    # m = folium.Map(location=[19, -12], zoom_start=2)
+
+    # folium.Marker([lat, lng], tooltip='Click for more',
+    #               popup=country).add_to(m)
+    # # Get HTML Representation of Map Object
+    # m = m._repr_html_()
+    # context = {
+    #     'm': m,
+    #     'form': form,
+    # }
+    # return render(request, 'index.html', context)
+
+#    if request.method == 'POST':
+#         form = SearchForm(request.POST)
+#         if form.is_valid():
+#             form.save()
+#             return redirect('/')
+#     else:
+#         form = SearchForm()
     # initial values
     distance = None
     destination = None
@@ -15,28 +53,66 @@ def calculate_distance_view(request):
     obj = get_object_or_404(Measurement, id=1)
     form = MeasurementModelForm(request.POST or None)
     geolocator = Nominatim(user_agent='measurements')
+    obg_s = Measurement.objects.all().last()
+    address = obg_s.address
+    location = geocoder.osm(address)
+    lat = location.lat
+    lng = location.lng
+    country = location.country
+    # Create Map Object
+    m = folium.Map(location=[19, -12], zoom_start=2)
+
+    # folium.Marker([lat, lng], tooltip='Click for more',
+    #               popup=country).add_to(m)
 
     # ip = '72.14.207.99'
     # ip = get_ip_address(request)
-    ip = '41.188.89.141'
-    country, city, lat, lon = get_geo(ip)
-    location = geolocator.geocode(city)
+    # ip = '41.188.89.141'
+    # country, city, lat, lon = get_geo(ip)
+    # location = geolocator.geocode(city)
+    # address = Search.objects.all().last()
+    # location = geocoder.osm(address)
+    # lat = location.lat
+    # lng = location.lng
+    # country = location.country
+    # if lat == None or lng == None:
+    #     address.delete()
+    #     return HttpResponse('You address input is invalid')
 
-    # location coordinates
-    l_lat = lat
-    l_lon = lon
-    pointA = (l_lat, l_lon)
+    # # location coordinates
+    # l_lat = lat
+    # l_lon = lon
+    # pointA = (l_lat, l_lon)
 
-    # initial folium map
-    m = folium.Map(width=800, height=500, location=get_center_coordinates(l_lat, l_lon), zoom_start=8)
-    # location marker
-    folium.Marker([l_lat, l_lon], tooltip='click here for more', popup=city['city'],
-                    icon=folium.Icon(color='purple')).add_to(m)
+    # # initial folium map
+    # m = folium.Map(width=800, height=500, location=get_center_coordinates(l_lat, l_lon), zoom_start=8)
+    # # location marker
+    # folium.Marker([l_lat, l_lon], tooltip='click here for more', popup=city['city'],
+    #                 icon=folium.Icon(color='purple')).add_to(m)
 
     if form.is_valid():
         instance = form.save(commit=False)
         destination_ = form.cleaned_data.get('destination')
         destination = geolocator.geocode(destination_)
+        address = form.cleaned_data.get('address')
+        location = geocoder.osm(address)
+        lat = location.lat
+        lng = location.lng
+        country = location.country
+        if lat == None or lng == None:
+            address.delete()
+            return HttpResponse('You address input is invalid')
+
+        # location coordinates
+        l_lat = lat
+        l_lon = lng
+        pointA = (l_lat, l_lon)
+
+        # initial folium map
+        m = folium.Map(width=800, height=500, location=get_center_coordinates(l_lat, l_lon), zoom_start=8)
+        # location marker
+        folium.Marker([l_lat, l_lon], tooltip='click here for more', popup=country,
+                        icon=folium.Icon(color='purple')).add_to(m)
 
         # destination coordinates
         d_lat = destination.latitude
@@ -48,7 +124,7 @@ def calculate_distance_view(request):
         # folium map modification
         m = folium.Map(width=800, height=500, location=get_center_coordinates(l_lat, l_lon, d_lat, d_lon), zoom_start=get_zoom(distance))
         # location marker
-        folium.Marker([l_lat, l_lon], tooltip='click here for more', popup=city['city'],
+        folium.Marker([l_lat, l_lon], tooltip='click here for more', popup=country,
                     icon=folium.Icon(color='purple')).add_to(m)
         # destination marker
         folium.Marker([d_lat, d_lon], tooltip='click here for more', popup=destination,
@@ -70,6 +146,7 @@ def calculate_distance_view(request):
         'destination': destination,
         'form': form,
         'map': m,
+        'address': address,
     }
 
     return render(request, 'measurements/main.html', context)
