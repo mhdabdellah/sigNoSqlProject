@@ -6,6 +6,7 @@ from geopy.distance import geodesic
 from .utils import get_geo, get_center_coordinates, get_zoom,get_ip_address
 import folium
 import geocoder
+import requests
 
 # Create your views here.
 
@@ -26,9 +27,7 @@ def calculate_distance_view(request):
     # Create Map Object
     m = folium.Map(location=[19, -12], zoom_start=2)
 
-    # folium.Marker([lat, lng], tooltip='Click for more',
-    #               popup=country).add_to(m)
-
+    # S
     if form.is_valid():
         instance = form.save(commit=False)
         destination_ = form.cleaned_data.get('destination')
@@ -79,6 +78,10 @@ def calculate_distance_view(request):
         instance.save()
     
     m = m._repr_html_()
+    api_url = "http://api.openweathermap.org./data/2.5/weather?appid=0c42f7f6b53b244c78a418f4f181282a&q="
+    url = api_url + "kiffa"
+    response = requests.get(url)
+    content = response.json()
 
     context = {
         'distance' : distance,
@@ -86,6 +89,10 @@ def calculate_distance_view(request):
         'form': form,
         'map': m,
         'address': address,
+        'city': address,
+        'temperature': content['main']['temp'],
+        'description' : content['weather'][0]['description'],
+        'icon' : content['weather'][0]['icon']
     }
 
     return render(request, 'measurements/main.html', context)
