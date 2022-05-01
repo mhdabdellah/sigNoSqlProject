@@ -3,7 +3,7 @@ from .models import Measurement
 from .forms import MeasurementModelForm
 from geopy.geocoders import Nominatim
 from geopy.distance import geodesic
-from .utils import get_geo, get_center_coordinates, get_zoom,get_ip_address
+from .utils import get_geo, get_center_coordinates, get_zoom
 import folium
 import geocoder
 import requests
