@@ -48,35 +48,75 @@ calculate distance
 </div>
 
 {{ map|safe }}
-
- <!-- start weather api resultat -->
 <div class="container">
-  <div class="columns">
-    <div class="column is-offset-4 is-4">
-      <div class="box">
-        <div class="media">
-          <div class="media-left">
-            <figure class="image is-50x50">
-              <img src="http://openweathermap.org/img/w/{{ icon }}.png" alt="Image">
-            </figure>
-          </div>
-          <div class="media-content">
-            <div class="content">
-              <p>
-                <span class="title"> {{ city }} </span>
-                <br>
-                <span class="subtitle"> {{ temperature }} °C</span>
-                <br>
-                {{ description }}
-              </p>
+  <div class="vertical-align">
+    <div class="vertical-wrapper">
+      <div class="row">
+        <!-- start colunm 1 -->
+        <div class="content col-sm-12 col-md-6">
+          <!-- start weather api resultat -->
+          <div class="container">
+            <div class="columns">
+              <div class="column is-offset-4 is-4">
+                <div class="box">
+                  <div class="media">
+                    <div class="media-left">
+                      <figure class="image is-50x50">
+                        <img src="http://openweathermap.org/img/w/{{ icon }}.png" alt="Image">
+                      </figure>
+                    </div>
+                    <div class="media-content">
+                      <div class="content">
+                        <p>
+                          <span class="title"> {{ city }} </span>
+                          <br>
+                          <span class="subtitle"> {{ temperature }} °C</span>
+                          <br>
+                          {{ description }}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
-        </div>
+          <!-- end the weather Api result -->
+        </div> <!-- END column 1-->
+        <!-- start column 2 -->
+        <div class="content col-sm-12 col-md-6">
+          <!-- start weather api resultat -->
+          <div class="container">
+            <div class="columns">
+              <div class="column is-offset-4 is-4">
+                <div class="box">
+                  <div class="media">
+                    <div class="media-left">
+                      <figure class="image is-50x50">
+                        <img src="http://openweathermap.org/img/w/{{ icon }}.png" alt="Image">
+                      </figure>
+                    </div>
+                    <div class="media-content">
+                      <div class="content">
+                        <p>
+                          <span class="title"> {{ city }} </span>
+                          <br>
+                          <span class="subtitle"> {{ temperature }} °C</span>
+                          <br>
+                          {{ description }}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div> <!-- end column 2 -->
       </div>
     </div>
   </div>
 </div>
-<!-- end the weather Api result -->
 
 <form action="" method="POST" autocomplete="off">
     {% csrf_token %}

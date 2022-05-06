@@ -14,6 +14,12 @@ def calculate_distance_view(request):
     # initial values
     distance = None
     destination = None
+    temperatureA = None
+    descriptionA = None
+    iconA = None
+    temperatureB = None
+    descriptionB = None
+    iconB = None
     
     obj = get_object_or_404(Measurement, id=1)
     form = MeasurementModelForm(request.POST or None)
@@ -37,6 +43,7 @@ def calculate_distance_view(request):
         lat = location.lat
         lng = location.lng
         country = location.country
+        cityA = location.city
         if lat == None or lng == None:
             address.delete()
             return HttpResponse('You address input is invalid')
@@ -55,6 +62,7 @@ def calculate_distance_view(request):
         # destination coordinates
         d_lat = destination.latitude
         d_lon = destination.longitude
+        cityB = destination.city
         pointB = (d_lat, d_lon)
         # distance calculation
         distance = round(geodesic(pointA, pointB).km, 2)
@@ -72,16 +80,30 @@ def calculate_distance_view(request):
         # draw the line between location and destination
         line = folium.PolyLine(locations=[pointA, pointB], weight=5, color='blue')
         m.add_child(line)
+
+        # weather api point A
+        api_urlA = "http://api.openweathermap.org./data/2.5/weather?appid=0c42f7f6b53b244c78a418f4f181282a&q="
+        urlA = api_urlA + "kiffa"
+        responseA = requests.get(urlA)
+        contentA = responseA.json() 
+        temperatureA = contentA['main']['temp']
+        descriptionA = contentA['weather'][0]['description']
+        iconA = contentA['weather'][0]['icon']
+        # weather api point B
+        api_urlB = "http://api.openweathermap.org./data/2.5/weather?appid=0c42f7f6b53b244c78a418f4f181282a&q="
+        urlB = api_urlB + "kiffa"
+        responseB = requests.get(urlB)
+        contentB = responseB.json() 
+        temperatureB = contentB['main']['temp']
+        descriptionB = contentB['weather'][0]['description']
+        iconB = contentB['weather'][0]['icon']
         
         instance.location = location
         instance.distance = distance
         instance.save()
     
     m = m._repr_html_()
-    api_url = "http://api.openweathermap.org./data/2.5/weather?appid=0c42f7f6b53b244c78a418f4f181282a&q="
-    url = api_url + "kiffa"
-    response = requests.get(url)
-    content = response.json()
+    
 
     context = {
         'distance' : distance,
@@ -90,9 +112,12 @@ def calculate_distance_view(request):
         'map': m,
         'address': address,
         'city': address,
-        'temperature': content['main']['temp'],
-        'description' : content['weather'][0]['description'],
-        'icon' : content['weather'][0]['icon']
+        'temperatureA': temperatureA,
+        'descriptionA' : descriptionA,
+        'iconA' : iconA,
+        'temperatureB': temperatureB,
+        'descriptionB' : descriptionB,
+        'iconB' : iconB
     }
 
     return render(request, 'measurements/main.html', context)
