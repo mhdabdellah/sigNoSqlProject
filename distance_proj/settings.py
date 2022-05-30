@@ -31,7 +31,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
-    'measurements.apps.SuiteConfig',
+    # 'measurements.apps.SuiteConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -78,12 +78,52 @@ WSGI_APPLICATION = 'distance_proj.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.0/ref/settings/#databases
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+#     }
+# }
+
+
+
+# Database
+# https://docs.djangoproject.com/en/2.1/ref/settings/#databases
+
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'djongo',
+#         'NAME': 'sigNoSql_db',
+#         'HOST': '127.0.0.1',
+#         'PORT': 27017,
+#     }
+# }
+
+
+# # mongodb 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'ENGINE': 'djongo', 
+        'NAME': 'sigNoSql',
+        # 'USER': 'root',
+        # 'PASSWORD': '',
+        # 'CLIENT':{
+        #     'HOST': 'localhost',
+        #     'PORT': '27017',
+        # }
+        
     }
 }
+# DATABASES = {
+#         'default': {
+#             'ENGINE': 'djongo',
+#             'NAME': 'your-db-name',
+#             'ENFORCE_SCHEMA': False,
+#             'CLIENT': {
+#                 'host': 'mongodb+srv://<username>:<password>@<atlas cluster>/<myFirstDatabase>?retryWrites=true&w=majority'
+#             }  
+#         }
+# }
 
 
 # Password validation

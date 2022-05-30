@@ -9,6 +9,6 @@ class MeasurementsConfig(AppConfig):
     verbose_name = 'Measurement between 2 locations'
 
 class SuiteConfig(DjangoSuitConfig):
-    # layout = "horizontal" 
+    layout = "horizontal"
     # vous pouvez utiliser 
-    layout = "vertical"
+    # layout = "vertical"

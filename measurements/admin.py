@@ -1,9 +1,11 @@
 from django.contrib import admin
 from .models import Measurement
+from django.contrib.auth.models import Group
 # Register your models here.
 
-admin.site.site_header = "7SEBLI 6rigy Admin Panel"
-admin.site.site_title = "7SEBLI 6rigy Admin Panel"
+admin.site.site_header = "System SIG NoSql Admin Panel "
+admin.site.site_title = "System SIG NoSql "
+# admin.site.index_title = "Bonjour Dans Projet SIG NOSqls"
 
 # class InlineName(admin.StackedInline ): 
 #     model = modelName
@@ -17,7 +19,7 @@ admin.site.site_title = "7SEBLI 6rigy Admin Panel"
 
 class  MeasurementAdmin(admin.ModelAdmin):
     fields = ['destination']
-    list_display = ['location','destination','distance','created','combine_destination_and_distance']
+    list_display = ['address','location','destination','distance','created','combine_destination_and_distance']
     list_display_links = ['location','combine_destination_and_distance']
     list_editable = ['destination']
     list_filter = ['location','destination','distance','created']
@@ -27,3 +29,4 @@ class  MeasurementAdmin(admin.ModelAdmin):
         return "{} - {}".format(obj.destination,obj.distance)
 
 admin.site.register(Measurement, MeasurementAdmin)
+admin.site.unregister(Group)

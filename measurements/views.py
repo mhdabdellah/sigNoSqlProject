@@ -3,7 +3,7 @@ from .models import Measurement
 from .forms import MeasurementModelForm
 from geopy.geocoders import Nominatim
 from geopy.distance import geodesic
-from .utils import get_geo, get_center_coordinates, get_zoom
+from .utils import get_center_coordinates, get_zoom
 import folium
 import geocoder
 import requests
@@ -20,6 +20,8 @@ def calculate_distance_view(request):
     temperatureB = None
     descriptionB = None
     iconB = None
+    cityB =""
+    cityA =""
     
     obj = get_object_or_404(Measurement, id=1)
     form = MeasurementModelForm(request.POST or None)
@@ -62,7 +64,7 @@ def calculate_distance_view(request):
         # destination coordinates
         d_lat = destination.latitude
         d_lon = destination.longitude
-        cityB = destination.city
+        # cityB = destination.city
         pointB = (d_lat, d_lon)
         # distance calculation
         distance = round(geodesic(pointA, pointB).km, 2)
@@ -82,16 +84,18 @@ def calculate_distance_view(request):
         m.add_child(line)
 
         # weather api point A
+        cityA = address
         api_urlA = "http://api.openweathermap.org./data/2.5/weather?appid=0c42f7f6b53b244c78a418f4f181282a&q="
-        urlA = api_urlA + "kiffa"
+        urlA = api_urlA + cityA
         responseA = requests.get(urlA)
         contentA = responseA.json() 
         temperatureA = contentA['main']['temp']
         descriptionA = contentA['weather'][0]['description']
         iconA = contentA['weather'][0]['icon']
         # weather api point B
+        cityB = destination_
         api_urlB = "http://api.openweathermap.org./data/2.5/weather?appid=0c42f7f6b53b244c78a418f4f181282a&q="
-        urlB = api_urlB + "kiffa"
+        urlB = api_urlB + cityB
         responseB = requests.get(urlB)
         contentB = responseB.json() 
         temperatureB = contentB['main']['temp']
@@ -111,7 +115,9 @@ def calculate_distance_view(request):
         'form': form,
         'map': m,
         'address': address,
-        'city': address,
+        # 'city': address,
+        'Rosso' : cityB,
+        'kiffa' : cityA,
         'temperatureA': temperatureA,
         'descriptionA' : descriptionA,
         'iconA' : iconA,
