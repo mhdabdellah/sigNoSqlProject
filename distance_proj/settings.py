@@ -32,6 +32,7 @@ ALLOWED_HOSTS = []
 
 INSTALLED_APPS = [
     # 'measurements.apps.SuiteConfig',
+    'jazzmin',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -104,7 +105,7 @@ WSGI_APPLICATION = 'distance_proj.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'djongo', 
-        'NAME': 'sigNoSql',
+        'NAME': 'SystemSigNoSql_db',
         # 'USER': 'root',
         # 'PASSWORD': '',
         # 'CLIENT':{
