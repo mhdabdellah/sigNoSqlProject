@@ -3,10 +3,11 @@ from .models import Measurement
 from .forms import MeasurementModelForm
 from geopy.geocoders import Nominatim
 from geopy.distance import geodesic
-from .utils import get_center_coordinates, get_zoom
+from .utils import get_center_coordinates, get_zoom,routing,get_route
 import folium
 import geocoder
 import requests
+import polyline
 
 # Create your views here.
 
@@ -79,9 +80,16 @@ def calculate_distance_view(request):
                     icon=folium.Icon(color='red', icon='cloud')).add_to(m)
 
 
-        # draw the line between location and destination
-        line = folium.PolyLine(locations=[pointA, pointB], weight=5, color='blue')
-        m.add_child(line)
+        l_lon,l_lat,d_lon,d_lat = float(l_lon),float(l_lat),float(d_lon),float(d_lat)
+        route=get_route(l_lon,l_lat,d_lon,d_lat)
+        
+        # drow the route betwen two locations
+        folium.PolyLine(route['route'],weight=8,color='blue',opacity=0.6).add_to(m)
+        # m.add_child(r)
+
+        # # draw the line between location and destination
+        # line = folium.PolyLine(locations=[pointA, pointB], weight=5, color='blue')
+        # m.add_child(line)
 
         # weather api point A
         cityA = address
@@ -127,3 +135,6 @@ def calculate_distance_view(request):
     }
 
     return render(request, 'measurements/main.html', context)
+
+def drow_object(request):
+    return render(request, 'measurements/draw.html')
